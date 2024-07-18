@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "475564250913",
+    "firebase_url": "https://fir-crudrealtimecar-default-rtdb.firebaseio.com",
+    "project_id": "fir-crudrealtimecar",
+    "storage_bucket": "fir-crudrealtimecar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475564250913:android:f247b3e656087a2037d060",
+        "android_client_info": {
+          "package_name": "com.example.recipeapppaparaproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOYuOgZRfWyVaNfEleIu3g044Wbzymts4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
