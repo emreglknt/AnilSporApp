@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +70,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
     var password by remember { mutableStateOf("") }
     val isFormValid = email.isNotEmpty() && password.length >= 6
     val scope = rememberCoroutineScope()
-    val loginResult = viewModel.loginResult.collectAsState(initial = null)
+    val loginResult by viewModel.loginResult.collectAsState()
+    val context = LocalContext.current
 
 
 
@@ -120,9 +122,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                             scope.launch {
                                 //firebase kullanıcı girişi
                                 viewModel.login(email, password)
-                                if (loginResult != null) {
-                                    navController.navigate("home_screen")
-                                }
                             }
                         },
                         isEnabled = isFormValid
@@ -137,8 +136,25 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
             }
         }
     }
-}
 
+    // Login result kontrolü ve hata mesajı gösterimi
+    LaunchedEffect(loginResult) {
+        loginResult?.let { result ->
+            when (result) {
+                is com.example.recipeapppaparaproject.data.repo.Result.Success -> {
+                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                    navController.navigate("home_screen")
+                }
+                is com.example.recipeapppaparaproject.data.repo.Result.Error -> {
+                    Toast.makeText(context, "Bilgileriniz Hatalı ", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+    }
+
+
+}
 
 
 @Composable
@@ -172,13 +188,6 @@ fun GradientButton(text: String, onClick: () -> Unit, isEnabled: Boolean) {
         )
     }
 }
-
-
-
-
-
-
-
 
 
 @Composable
@@ -234,9 +243,6 @@ fun MyTextField(
         singleLine = true
     )
 }
-
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)

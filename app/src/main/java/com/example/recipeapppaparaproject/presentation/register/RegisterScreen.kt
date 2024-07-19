@@ -28,10 +28,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 
 import com.example.recipeapppaparaproject.R
+import com.example.recipeapppaparaproject.data.repo.Result
 import com.example.recipeapppaparaproject.presentation.AuthViewModel.AuthViewModel
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
-
-
 
 
 @Composable
@@ -43,9 +43,9 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
     var passwordError by remember { mutableStateOf(false) }
     var passwordMatchError by remember { mutableStateOf(false) }
     val gradient = Brush.horizontalGradient(listOf(Color(0xFF000000), Color(0xFFFF0d47a1)))
-    val registerResult by viewModel.registerResult.collectAsState(initial = null)
+    val registerResult by viewModel.registerResult.collectAsState()
     val context = LocalContext.current
-
+    val scope = rememberCoroutineScope()
 
     val emailPattern = Pattern.compile(
         "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
@@ -114,7 +114,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
                         Icons.Filled.Email,
                         contentDescription = null,
                         tint = Color(0xFF000000),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(22.dp)
                     )
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -134,7 +134,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = password,
@@ -209,9 +209,6 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
             GradientButton(
                 text = "Katıl",
                 gradient = gradient,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 12.dp),
                 onClick = {
                     emailError = !validateEmail(email.text)
                     passwordError = !validatePassword(password.text)
@@ -219,40 +216,49 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
 
 
                     if (!emailError && !passwordError && !passwordMatchError) {
-                        viewModel.signup(email.text, password.text)
+                        scope.launch {
+                            viewModel.signup(email.text, password.text)
+                        }
                     }
                 }
             )
             LaunchedEffect(registerResult) {
-                registerResult?.let { user ->
-                    if (user != null) {
-                        navController.navigate("main_screen")
-                    } else {
-                        Toast.makeText(context, "Registration Failed", Toast.LENGTH_SHORT).show()
+                registerResult?.let { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            Toast.makeText(context, " Kayıt Başarılı", Toast.LENGTH_SHORT).show()
+                            navController.navigate("login_screen")
+                        }
+
+                        is com.example.recipeapppaparaproject.data.repo.Result.Error -> {
+                            Toast.makeText(context, " Kayıt Failed ", Toast.LENGTH_SHORT).show()
+                        }
+
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Row {
-                Text(
-                    text = "Zaten bir hesabın var mı?",
-                    style = MaterialTheme.typography.body2,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "Giriş Yap!",
-                    style = MaterialTheme.typography.body2,
-                    color = Color(0xFFFF0d47a1),
-                    modifier = Modifier.clickable {
-                        // login sayfasina yonlendirme
-                        navController.navigate("login_screen")
-                    }
-                )
-            }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row {
+            Text(
+                text = "Zaten bir hesabın var mı?",
+                style = MaterialTheme.typography.body2,
+                color = Color.Gray
+            )
+            Text(
+                text = "Giriş Yap!",
+                style = MaterialTheme.typography.body2,
+                color = Color(0xFFFF0d47a1),
+                modifier = Modifier.clickable {
+                    // login sayfasina yonlendirme
+                    navController.navigate("login_screen")
+                }
+            )
         }
     }
+}
 }
 
 @Composable
@@ -272,17 +278,19 @@ fun GradientButton(
 
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(25.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
         modifier = modifier
-            .background(backgroundColor)
+            .height(50.dp)
+            .fillMaxWidth()
+            .background(backgroundColor, shape = RoundedCornerShape(22.dp))
             .padding(horizontal = 20.dp, vertical = 12.dp),
         enabled = isEnabled
     ) {
         Text(
             text = text,
             color = Color.White,
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
         )
     }
 }

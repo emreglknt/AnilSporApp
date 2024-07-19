@@ -1,5 +1,6 @@
 package com.example.recipeapppaparaproject.presentation.kadrodizlis
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +52,7 @@ import com.example.recipeapppaparaproject.R
 import com.example.recipeapppaparaproject.data.model.Player
 import com.example.recipeapppaparaproject.presentation.playerViewModel.PlayerViewModel
 import com.example.recipeapppaparaproject.presentation.playerViewModel.UIState
+import com.example.recipeapppaparaproject.utils.captureAndShareScreenshot
 
 @Composable
 fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hiltViewModel()) {
@@ -58,6 +61,7 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
     var selectedPosition by remember { mutableStateOf<Position?>(null) }
     var isPlayerSelectionVisible by remember { mutableStateOf(false) }
     val selectedPlayers = remember { mutableStateOf(mutableMapOf<Position, Player>()) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.getPlayers()
@@ -70,6 +74,18 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
+
+        Button(
+            onClick = {
+                val activity = context as? Activity
+                activity?.window?.decorView?.let { view ->
+                    captureAndShareScreenshot(context, view)
+                }
+            },
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+        ) {
+            Text("Share")
+        }
 
         // Forwards
         PositionButton(
@@ -84,7 +100,7 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
         // Midfielders
         Row(
             modifier = Modifier.align(Alignment.Center),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             PositionButton(
                 player = selectedPlayers.value[Position.MIDFIELDER1],
@@ -93,7 +109,7 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
                     isPlayerSelectionVisible = true
                 }
             )
-            Spacer(modifier = Modifier.width(16.dp)) // Aralarında boşluk ekliyoruz
+            Spacer(modifier = Modifier.width(40.dp)) // Aralarında boşluk ekliyoruz
             PositionButton(
                 player = selectedPlayers.value[Position.MIDFIELDER2],
                 onClick = {
@@ -105,11 +121,11 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
 
         // Defenders
         Row(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 100.dp),
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 180.dp),
             horizontalArrangement = Arrangement.Center
         ) {
             PositionButton(
-                modifier = Modifier.padding(end = 4.dp),
+                modifier = Modifier.padding(end = 7.dp),
                 player = selectedPlayers.value[Position.DEFENDER1],
                 onClick = {
                     selectedPosition = Position.DEFENDER1
@@ -117,7 +133,7 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
                 }
             )
             PositionButton(
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = 6.dp),
                 player = selectedPlayers.value[Position.DEFENDER2],
                 onClick = {
                     selectedPosition = Position.DEFENDER2
@@ -125,7 +141,7 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
                 }
             )
             PositionButton(
-                modifier = Modifier.padding(start = 4.dp),
+                modifier = Modifier.padding(start = 5.dp),
                 player = selectedPlayers.value[Position.DEFENDER3],
                 onClick = {
                     selectedPosition = Position.DEFENDER3
@@ -184,11 +200,11 @@ fun PositionButton(modifier: Modifier = Modifier, player: Player?, onClick: () -
         onClick = onClick,
         modifier = modifier
             .size(100.dp)
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(20.dp)),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFC107))
     ) {
         if (player == null) {
-            Text(text = "+", fontSize = 24.sp)
+            Text(text = "+", fontSize = 20.sp)
         } else {
             PlayerCard2(player = player)
         }
@@ -200,24 +216,23 @@ fun PlayerCard2(player: Player) {
     Column(
         modifier = Modifier
             .padding(4.dp)
-            .size(60.dp),
+            .size(80.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = rememberImagePainter(player.pp),
             contentDescription = null,
             modifier = Modifier
-                .size(40.dp)
+                .size(50.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
         Text(
             text = player.name,
-            style = MaterialTheme.typography.body2,
             fontWeight = FontWeight.Bold,
             fontSize = 10.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 2.dp)
+            modifier = Modifier.padding(top = 2.dp),
         )
     }
 }
