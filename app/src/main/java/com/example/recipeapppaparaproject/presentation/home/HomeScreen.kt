@@ -81,14 +81,26 @@ fun HomeScreen(navController: NavController, viewModel: PlayerViewModel = hiltVi
         CustomCard(navController)
 
 
-        Text(
-            text = "Anıl Spor Oyuncuları",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+        Row(
             modifier = Modifier
-                .padding(top = 40.dp)
-                .align(Alignment.Start)
-        )
+                .padding(top = 40.dp, start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Anıl Spor Oyuncuları",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f) // Text'i sola hizalamak için ağırlık veriyoruz
+            )
+
+            GradientButton(
+                text = "Rate Players ➤",
+                onClick = {
+                    navController.navigate("rate_screen")
+                }
+            )
+        }
 
         when (playersState) {
             is UIState.Loading -> {
@@ -122,7 +134,36 @@ fun HomeScreen(navController: NavController, viewModel: PlayerViewModel = hiltVi
         }
     }
 }
+@Composable
+fun GradientButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    val gradientBrush = Brush.horizontalGradient(
+        colors = listOf(Color(0xFFD16442), Color(0xFFFFA500)), // Sarı ve turuncu gradient renkler
+        startX = 0f,
+        endX = 1000f
+    )
 
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent // Degrade arka plan için buton rengini şeffaf yapıyoruz
+        ),
+        contentPadding = ButtonDefaults.ContentPadding,
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .background(brush = gradientBrush, shape = RoundedCornerShape(12.dp))
+            .height(48.dp)
+    ) {
+        Text(
+            text = text,
+            color = Color.Black, // Yazı rengini siyah yapıyoruz
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
 
 @Composable
 fun SearchBar(searchText: String, onTextChange: (String) -> Unit) {

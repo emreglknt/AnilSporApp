@@ -30,7 +30,7 @@ fun WelcomeScreen(navController: NavController) {
 
 
     Image(
-        painter = painterResource(id = R.drawable.wlcome),
+        painter = painterResource(id = R.drawable.girisss),
         contentDescription = null,
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.FillBounds)
@@ -72,14 +72,14 @@ fun WelcomeScreen(navController: NavController) {
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0d47a1)),
                 modifier = Modifier
-                    .padding(11.dp, 24.dp)
+                    .padding(13.dp, 26.dp)
                     .fillMaxWidth()
             ) {
 
                 Text(
                     text = "Başla  ❯❯",
                     color = Color.White,
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 )
 
             }

@@ -169,7 +169,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = confirmPassword,
@@ -204,7 +204,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             GradientButton(
                 text = "Katıl",
@@ -239,7 +239,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = hilt
             }
 
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         Row {
             Text(
@@ -283,8 +283,7 @@ fun GradientButton(
         modifier = modifier
             .height(50.dp)
             .fillMaxWidth()
-            .background(backgroundColor, shape = RoundedCornerShape(22.dp))
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .background(backgroundColor, shape = RoundedCornerShape(22.dp)),
         enabled = isEnabled
     ) {
         Text(

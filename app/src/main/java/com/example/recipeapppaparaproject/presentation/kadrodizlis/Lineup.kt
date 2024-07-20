@@ -82,9 +82,21 @@ fun LineUpScreen(navController: NavController, viewModel: PlayerViewModel = hilt
                     captureAndShareScreenshot(context, view)
                 }
             },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+            modifier = Modifier.align(Alignment.TopEnd).padding(16.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent)
         ) {
-            Text("Share")
+            Image(
+                painter = painterResource(id = R.drawable.wp), // WhatsApp ikonu için drawable kaynağınız
+                contentDescription = "WhatsApp Icon",
+                modifier = Modifier.size(30.dp),
+                contentScale = ContentScale.Fit
+            )
+            Spacer(modifier = Modifier.size(8.dp)) // İkon ve metin arasına boşluk ekleyin
+            Text(
+                text = "Share",
+                fontSize = 16.sp,
+                color = Color.White
+            )
         }
 
         // Forwards
